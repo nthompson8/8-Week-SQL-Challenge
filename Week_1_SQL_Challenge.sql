@@ -140,7 +140,9 @@ INNER JOIN dannys_diner.sales AS sales
 	ON menu.product_id = sales.product_id;
 
 -- 10. In the first week after a customer joins the program (including their join date) they earn 2x points on all items, not just sushi - how many points do customer A and B have at the end of January?
--- create point_info view, add case statements for points, add where clause to make sure only dates after the join date are included, put query as CTE, make following query with sum of points grouped by customer id
+-- create point_info view, add case statements for points
+-- add where clause to make sure only dates after the join date are included
+-- put query as CTE, make following query with sum of points grouped by customer id
 WITH promo_period
 AS (
 	SELECT customer_id
@@ -148,18 +150,11 @@ AS (
 		, order_date - join_date AS date_diff
 		, points
 		, CASE 
-			WHEN product_name IN (
-					'curry'
-					, 'ramen'
-					, 'sushi'
-					)
+			WHEN product_name IN ('curry', 'ramen', 'sushi')
 				AND order_date - join_date BETWEEN 0
 					AND 6
 				THEN points * 2
-			WHEN product_name IN (
-					'curry'
-					, 'ramen'
-					)
+			WHEN product_name IN ('curry', 'ramen')
 				AND order_date - join_date > 6
 				THEN points
 			WHEN product_name = 'sushi'
